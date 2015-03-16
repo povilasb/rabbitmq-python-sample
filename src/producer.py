@@ -4,7 +4,10 @@ import pika
 
 
 def main():
-    produce_message("Hello world!")
+    for i in range(20):
+        produce_message("Hello world!")
+
+    raw_input("Hit ENTER to finish.")
 
 
 def produce_message(msg):
