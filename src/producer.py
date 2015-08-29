@@ -12,11 +12,10 @@ def main():
 
 def produce_message(msg):
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters("localhost"))
+        pika.ConnectionParameters("192.168.1.222"))
 
     channel = connection.channel()
-    channel.queue_declare(queue = "hello")
-    channel.basic_publish(exchange = "", routing_key = "hello",
+    channel.basic_publish(exchange = "my_msgs", routing_key = "consumer1",
         body = msg)
 
     connection.close()
