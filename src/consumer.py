@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from threading import Thread
+import time
 
 import pika
 
@@ -8,12 +9,23 @@ import pika_utils
 
 
 def main():
-    consume_message()
-
-def consume_message():
     connection = pika_utils.make_blocking_connection()
     channel = connection.channel()
+    t = Thread(target=consume_message, args=(channel,))
+    t.start()
 
+    time.sleep(2)
+    print "Stopping consuming"
+    channel.stop_consuming()
+
+    print "Joining thread"
+    t.join()
+    print "Thread joined"
+
+    channel.close()
+    connection.close()
+
+def consume_message(channel):
     channel.exchange_declare(
         exchange = 'my_msgs',
         type = 'direct'
@@ -29,24 +41,14 @@ def consume_message():
     )
 
     consumer_tag = channel.basic_consume(on_msg_receive, queue = queue_name, no_ack = True)
-    channel.start_consuming()
 
-    channel.basic_cancel(consumer_tag)
-
-    consumer_tag = channel.basic_consume(on_msg_receive, queue = queue_name, no_ack = True)
+    print "Start consuming"
     channel.start_consuming()
     print "Finished consuming"
-
-    while 1:
-        pass
-
-    connection.close()
 
 
 def on_msg_receive(channel, method, properties, body):
     print("Received %r" % body)
-
-    channel.stop_consuming()
 
 
 if __name__ == "__main__":
