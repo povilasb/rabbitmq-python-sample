@@ -1,16 +1,17 @@
 #!/usr/bin/python
 
+from threading import Thread
+
 import pika
+
+import pika_utils
 
 
 def main():
     consume_message()
 
-
 def consume_message():
-    connection = pika.BlockingConnection(
-        pika.ConnectionParameters("192.168.1.222"))
-
+    connection = pika_utils.make_blocking_connection()
     channel = connection.channel()
 
     channel.exchange_declare(
@@ -27,14 +28,25 @@ def consume_message():
         routing_key = "consumer1"
     )
 
-    channel.basic_consume(on_msg_receive, queue = queue_name, no_ack = True)
+    consumer_tag = channel.basic_consume(on_msg_receive, queue = queue_name, no_ack = True)
     channel.start_consuming()
+
+    channel.basic_cancel(consumer_tag)
+
+    consumer_tag = channel.basic_consume(on_msg_receive, queue = queue_name, no_ack = True)
+    channel.start_consuming()
+    print "Finished consuming"
+
+    while 1:
+        pass
 
     connection.close()
 
 
 def on_msg_receive(channel, method, properties, body):
     print("Received %r" % body)
+
+    channel.stop_consuming()
 
 
 if __name__ == "__main__":

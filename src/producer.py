@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import pika
+import pika_utils
 
 
 def main():
@@ -11,8 +12,7 @@ def main():
 
 
 def produce_message(msg):
-    connection = pika.BlockingConnection(
-        pika.ConnectionParameters("192.168.1.222"))
+    connection = pika_utils.make_blocking_connection()
 
     channel = connection.channel()
     channel.basic_publish(exchange = "my_msgs", routing_key = "consumer1",
