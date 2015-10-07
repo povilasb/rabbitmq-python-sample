@@ -11,12 +11,15 @@ import pika_utils
 def main():
 	connection = pika_utils.make_blocking_connection()
 	channel = connection.channel()
+
 	t = Thread(target=consume_message, args=(channel,))
 	t.start()
 
 	time.sleep(2)
 	print "Stopping consuming"
-	channel.stop_consuming()
+
+	channel.basic_publish(exchange = "my_msgs", routing_key = "consumer1",
+		body = 'END')
 
 	print "Joining thread"
 	t.join()
@@ -40,7 +43,7 @@ def consume_message(channel):
 		routing_key = "consumer1"
 	)
 
-	consumer_tag = channel.basic_consume(on_msg_receive, queue = queue_name, no_ack = True)
+	channel.basic_consume(on_msg_receive, queue = queue_name, no_ack = True)
 
 	print "Start consuming"
 	channel.start_consuming()
@@ -49,6 +52,8 @@ def consume_message(channel):
 
 def on_msg_receive(channel, method, properties, body):
 	print("Received %r" % body)
+	if body == 'END':
+		channel.stop_consuming()
 
 
 if __name__ == "__main__":
