@@ -6,7 +6,7 @@ def make_blocking_connection():
     Ars:
         config (object): options config parse from proxy.conf.
     """
-    credentials = pika.PlainCredentials('user1', 'password1')
+    credentials = pika.PlainCredentials('guest', 'guest')
     connection_params = pika.ConnectionParameters(
         host = '192.168.1.240',
         credentials = credentials,
