@@ -9,52 +9,52 @@ import pika_utils
 
 
 def main():
-	connection = pika_utils.make_blocking_connection()
-	channel = connection.channel()
+    connection = pika_utils.make_blocking_connection()
+    channel = connection.channel()
 
-	t = Thread(target=consume_message, args=(channel,))
-	t.start()
+    t = Thread(target=consume_message, args=(channel,))
+    t.start()
 
-	time.sleep(2)
-	print "Stopping consuming"
+    time.sleep(2)
+    print "Stopping consuming"
 
-	channel.basic_publish(exchange = "my_msgs", routing_key = "consumer1",
-		body = 'END')
+    channel.basic_publish(exchange = "my_msgs", routing_key = "consumer1",
+        body = 'END')
 
-	print "Joining thread"
-	t.join()
-	print "Thread joined"
+    print "Joining thread"
+    t.join()
+    print "Thread joined"
 
-	channel.close()
-	connection.close()
+    channel.close()
+    connection.close()
 
 def consume_message(channel):
-	channel.exchange_declare(
-		exchange = 'my_msgs',
-		type = 'direct'
-	)
+    channel.exchange_declare(
+        exchange = 'my_msgs',
+        type = 'direct'
+    )
 
-	listen_queue = channel.queue_declare(exclusive=True)
-	queue_name = listen_queue.method.queue
+    listen_queue = channel.queue_declare(exclusive=True)
+    queue_name = listen_queue.method.queue
 
-	channel.queue_bind(
-		exchange = 'my_msgs',
-		queue = queue_name,
-		routing_key = "consumer1"
-	)
+    channel.queue_bind(
+        exchange = 'my_msgs',
+        queue = queue_name,
+        routing_key = "consumer1"
+    )
 
-	channel.basic_consume(on_msg_receive, queue = queue_name, no_ack = True)
+    channel.basic_consume(on_msg_receive, queue = queue_name, no_ack = True)
 
-	print "Start consuming"
-	channel.start_consuming()
-	print "Finished consuming"
+    print "Start consuming"
+    channel.start_consuming()
+    print "Finished consuming"
 
 
 def on_msg_receive(channel, method, properties, body):
-	print("Received %r" % body)
-	if body == 'END':
-		channel.stop_consuming()
+    print("Received %r" % body)
+    if body == 'END':
+        channel.stop_consuming()
 
 
 if __name__ == "__main__":
-	main()
+    main()
