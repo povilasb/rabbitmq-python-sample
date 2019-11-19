@@ -7,7 +7,7 @@ import aioamqp
 
 async def main_async(msg_priority: int):
     _transport, protocol = await aioamqp.connect(
-        host='172.17.0.2',
+        host='127.0.0.1',
         on_error=on_error,
     )
     chann = await protocol.channel()
