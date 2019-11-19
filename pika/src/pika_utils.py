@@ -1,18 +1,10 @@
 import pika
 
-def make_blocking_connection():
-    """Create pika blocking connection with the specified parameters.
 
-    Ars:
-        config (object): options config parse from proxy.conf.
-    """
+def make_blocking_connection(host: str):
     credentials = pika.PlainCredentials('guest', 'guest')
     connection_params = pika.ConnectionParameters(
-        host = '192.168.1.240',
-        credentials = credentials,
+        host=host,
+        credentials=credentials,
     )
-
-    connection = pika.BlockingConnection(
-        connection_params)
-
-    return connection
+    return pika.BlockingConnection(connection_params)
