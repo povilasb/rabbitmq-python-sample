@@ -1,0 +1,36 @@
+[[package]]
+name = "aioamqp"
+version = "0.15.0"
+description = "AMQP implementation using asyncio"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+pamqp = ">=3.1.0"
+
+[[package]]
+name = "pamqp"
+version = "3.1.0"
+description = "RabbitMQ Focused AMQP low-level library"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+codegen = ["lxml", "requests", "yapf"]
+testing = ["coverage", "flake8", "flake8-comprehensions", "flake8-deprecated", "flake8-import-order", "flake8-print", "flake8-quotes", "flake8-rst-docstrings", "flake8-tuple", "yapf"]
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.10"
+content-hash = "79a6351f66aa293ad6afc538f47b4b809189ae25ba39185b4f65eee49b1c65b4"
+
+[metadata.files]
+aioamqp = [
+    {file = "aioamqp-0.15.0-py37.py38.py39.py310-none-any.whl", hash = "sha256:0f38cc4db8db6fd062504b7c4b6703c800d2130d14d5492cf47d727de1929740"},
+    {file = "aioamqp-0.15.0.tar.gz", hash = "sha256:fcad924d7658e65ef074522a7e9527e0b0adad09b10774340ea9f3fd277452d8"},
+]
+pamqp = [
+    {file = "pamqp-3.1.0.tar.gz", hash = "sha256:e4f0886d72c6166637a5513626148bf5a7e818073a558980e9aaed8b4ccf30da"},
+]

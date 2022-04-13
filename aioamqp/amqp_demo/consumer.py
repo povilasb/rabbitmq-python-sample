@@ -1,10 +1,9 @@
 import asyncio
-import json
 
 import aioamqp
 
 
-async def main_async():
+async def main():
     _transport, protocol = await aioamqp.connect(
         host='127.0.0.1',
         on_error=on_error,
@@ -25,8 +24,4 @@ async def on_error(exception):
     print('RabbitMQ error:', exception)
 
 
-def main():
-    asyncio.get_event_loop().run_until_complete(main_async())
-
-
-main()
+asyncio.run(main())
